@@ -1,0 +1,2 @@
+# mjbot.Plugins.Public
+
