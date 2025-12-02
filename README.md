@@ -25,7 +25,7 @@ mjbot 的公共插件仓库。包含官方提供的开源插件示例与实现�
 
 ## 贡献
 
-欢迎提交 Pull Request 贡献代码！请参阅 [贡献指南 (contribute.md)](contribute.md)。
+欢迎提交 Pull Request 贡献代码！请参阅 [贡献指南 (CLA.md)](CLA.md)。
 
 ## 许可证
 
