@@ -81,7 +81,7 @@ class DemoPlugin(ILogger<DemoPlugin> logger,
 
     [CommandHandler("option")]
     [Description("Echo all of your contents.")]
-    public IResponse Option([Option("o")] byte option)
+    public IResponse Option([Option("option", Abbreviate = 'o')] byte option)
     {
         return Reply(((byte)(option + 1)).ToString());
     }
