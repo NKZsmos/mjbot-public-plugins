@@ -1,0 +1,3 @@
+[submodule "dependencies/MilkiBotFramework"]
+	path = dependencies/MilkiBotFramework
+	url = https://github.com/Milkitic/MilkiBotFramework.git

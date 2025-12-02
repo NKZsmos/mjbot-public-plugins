@@ -1,10 +1,15 @@
-﻿#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
+﻿/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * Copyright (c) 2025 BJMANIA
+ */
 
-using System;
-using System.Collections.Generic;
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
+
 using System.ComponentModel;
 using System.Text.Json;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using MilkiBotFramework.Messaging;
 using MilkiBotFramework.Plugining;

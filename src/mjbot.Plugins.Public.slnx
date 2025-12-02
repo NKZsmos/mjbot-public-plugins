@@ -1,4 +1,9 @@
 <Solution>
-  <Folder Name="/Dependencies/" />
+  <Folder Name="/Dependencies/">
+    <Project Path="../dependencies/MilkiBotFramework/src/MilkiBotFramework.Aspnetcore/MilkiBotFramework.Aspnetcore.csproj" />
+    <Project Path="../dependencies/MilkiBotFramework/src/MilkiBotFramework.Imaging.Avalonia/MilkiBotFramework.Imaging.Avalonia.csproj" />
+    <Project Path="../dependencies/MilkiBotFramework/src/MilkiBotFramework/MilkiBotFramework.csproj" />
+    <Project Path="../dependencies/MilkiBotFramework/src/Platforms/MilkiBotFramework.Platforms.QQ/MilkiBotFramework.Platforms.QQ.csproj" />
+  </Folder>
   <Project Path="mjbot.Plugins.Public/mjbot.Plugins.Public.csproj" />
 </Solution>
