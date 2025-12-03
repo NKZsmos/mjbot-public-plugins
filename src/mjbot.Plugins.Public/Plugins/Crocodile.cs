@@ -22,7 +22,7 @@ public class Crocodile : BasicPlugin
     private static readonly Encoding Gbk = Encoding.GetEncoding(936);
 
     private static readonly SearchValues<char> ProtectedChars = SearchValues.Create([
-        '?', '，', '《', '》', '！', '？', '“', '”', '：', '；',
+        '，', '《', '》', '！', '？', '“', '”', '：', '；',
         '‘', '’', '【', '】', '…', '（', '）'
     ]);
 
