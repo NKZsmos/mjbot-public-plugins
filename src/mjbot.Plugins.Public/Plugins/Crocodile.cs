@@ -6,45 +6,57 @@
  * Copyright (c) 2025 BJMANIA
  */
 
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-
-using Microsoft.Extensions.Logging;
+using System.Buffers;
+using System.Text;
 using Microsoft.International.Converters.TraditionalChineseToSimplifiedConverter;
 using MilkiBotFramework.Messaging;
 using MilkiBotFramework.Plugining;
 using MilkiBotFramework.Plugining.Attributes;
-using MilkiBotFramework.Plugining.Configuration;
-using mjbot.Configurations;
-using System.ComponentModel;
-using System.Text;
-using System.Text.Json;
 
 namespace mjbot.Plugins;
 
-[PluginIdentifier("CD18B6F0-A703-7A7D-98DA-1BCBE5585890", Index = 1, Authors = "isaax", Scope = "game")]
-class Crocodile(ILogger<DemoPlugin> logger,
-    IConfiguration<TestConfiguration> configuration,
-    IRichMessageConverter richMessageConverter,
-    PluginManager pluginManager) : BasicPlugin
+[PluginIdentifier("CD18B6F0-A703-7A7D-98DA-1BCBE5585890", Index = 1, Authors = "isaax", Scope = "mjbot")]
+public class Crocodile : BasicPlugin
 {
+    private static readonly Encoding EucJp = Encoding.GetEncoding(51932);
+    private static readonly Encoding Gbk = Encoding.GetEncoding(936);
+
+    private static readonly SearchValues<char> ProtectedChars = SearchValues.Create([
+        '?', '，', '《', '》', '！', '？', '“', '”', '：', '；',
+        '‘', '’', '【', '】', '…', '（', '）'
+    ]);
+
     [CommandHandler("goose", AllowedMessageType = MessageType.Channel)]
-    public IResponse Group([Argument] string content)
+    public IResponse? Goose([Argument] string content)
     {
-        byte[] bytes = Encoding.GetEncoding(51932).GetBytes(ChineseConverter.Convert(content, ChineseConversionDirection.SimplifiedToTraditional));
-        string result = Encoding.GetEncoding(936).GetString(bytes);
-        string text = "";
-        for (int i = 0; i < result.Length; i++)
+        if (string.IsNullOrEmpty(content))
         {
-            if (result[i] == '?' || content[i] == '，' || content[i] == '《' || content[i] == '》' || content[i] == '！' || content[i] == '？' || content[i] == '“' || content[i] == '”' || content[i] == '：' || content[i] == '；' || content[i] == '‘' || content[i] == '’' || content[i] == '【' || content[i] == '】' || content[i] == '…' || content[i] == '（' || content[i] == '）')
+            return null;
+        }
+
+        string? traditional = ChineseConverter.Convert(content, ChineseConversionDirection.SimplifiedToTraditional);
+        byte[] bytes = EucJp.GetBytes(traditional);
+        string result = Gbk.GetString(bytes);
+
+        StringBuilder sb = new(result.Length);
+
+        int length = Math.Min(result.Length, content.Length);
+
+        for (int i = 0; i < length; i++)
+        {
+            char originalChar = content[i];
+            char glitchedChar = result[i];
+
+            if (glitchedChar == '?' || ProtectedChars.Contains(originalChar))
             {
-                text += content[i];
+                sb.Append(originalChar);
             }
             else
             {
-                text += result[i];
+                sb.Append(glitchedChar);
             }
         }
-        return Reply(text);
-    }
 
+        return Reply(sb.ToString());
+    }
 }
