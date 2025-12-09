@@ -7,6 +7,7 @@
  */
 
 using System.Buffers;
+using System.ComponentModel;
 using System.Text;
 using Microsoft.International.Converters.TraditionalChineseToSimplifiedConverter;
 using MilkiBotFramework.Messaging;
@@ -17,6 +18,7 @@ using MilkiBotFramework.Services;
 namespace mjbot.Plugins;
 
 [PluginIdentifier("CD18B6F0-A703-7A7D-98DA-1BCBE5585890", Index = 1, Authors = "isaax", Scope = "mjbot")]
+[Description("鳄鱼插件")]
 public class Crocodile(ISensitiveScanService sensitiveScanService) : BasicPlugin
 {
     private const int MaxLoopCount = 10000;
@@ -35,7 +37,8 @@ public class Crocodile(ISensitiveScanService sensitiveScanService) : BasicPlugin
     /// <returns></returns>
     private static string Convert1(string origin)
     {
-        string traditional = ChineseConverter.Convert(origin, ChineseConversionDirection.SimplifiedToTraditional).Replace('爲', '為'); // 先转换为繁体
+        string traditional = ChineseConverter.Convert(origin, ChineseConversionDirection.SimplifiedToTraditional)
+            .Replace('爲', '為'); // 先转换为繁体
         byte[] bytes = EucJp.GetBytes(traditional);
         string result = Gbk.GetString(bytes); // 转鹅语
 
@@ -70,7 +73,8 @@ public class Crocodile(ISensitiveScanService sensitiveScanService) : BasicPlugin
     {
         byte[] bytes = Gbk.GetBytes(origin);
         string chinese = EucJp.GetString(bytes); // 转中文
-        string simplified = ChineseConverter.Convert(chinese, ChineseConversionDirection.TraditionalToSimplified); // 将转成的繁体中文转成简体
+        string simplified =
+            ChineseConverter.Convert(chinese, ChineseConversionDirection.TraditionalToSimplified); // 将转成的繁体中文转成简体
 
         StringBuilder sb = new(simplified.Length);
 
@@ -99,6 +103,7 @@ public class Crocodile(ISensitiveScanService sensitiveScanService) : BasicPlugin
     /// <param name="context">所有参数（含空格）</param>
     /// <returns></returns>
     [CommandHandler("goose")]
+    [Description("中文转一阶鹅语指令")]
     public async Task<IResponse?> Goose(MessageContext context)
     {
         var param = context.CommandLineResult?.SimpleArgument.ToString();
@@ -118,6 +123,7 @@ public class Crocodile(ISensitiveScanService sensitiveScanService) : BasicPlugin
     /// <param name="context">所有参数（含空格）</param>
     /// <returns></returns>
     [CommandHandler("goose2")]
+    [Description("鹅语转一阶中文指令")]
     public async Task<IResponse?> Goose2(MessageContext context)
     {
         var param = context.CommandLineResult?.SimpleArgument.ToString();
@@ -137,6 +143,7 @@ public class Crocodile(ISensitiveScanService sensitiveScanService) : BasicPlugin
     /// <param name="context">所有参数（含空格）</param>
     /// <returns></returns>
     [CommandHandler("goose3")]
+    [Description("中文转特征鹅语指令")]
     public async Task<IResponse?> Goose3(MessageContext context)
     {
         var param = context.CommandLineResult?.SimpleArgument.ToString();
@@ -164,6 +171,7 @@ public class Crocodile(ISensitiveScanService sensitiveScanService) : BasicPlugin
     /// <param name="context">所有参数（含空格）</param>
     /// <returns></returns>
     [CommandHandler("goose4")]
+    [Description("鹅语转特征中文指令")]
     public async Task<IResponse?> Goose4(MessageContext context)
     {
         var param = context.CommandLineResult?.SimpleArgument.ToString();
@@ -191,6 +199,7 @@ public class Crocodile(ISensitiveScanService sensitiveScanService) : BasicPlugin
     /// <param name="context">所有参数（含空格）</param>
     /// <returns></returns>
     [CommandHandler("goose5")]
+    [Description("中文转乱码鹅语指令（实际为鹅语加很多空格后转特征中文）")]
     public async Task<IResponse?> Goose5(MessageContext context)
     {
         var param = context.CommandLineResult?.SimpleArgument.ToString();
