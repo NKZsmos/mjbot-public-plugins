@@ -6,6 +6,7 @@
  * Copyright (c) 2025 BJMANIA
  */
 
+using Microsoft.Extensions.Primitives;
 using Microsoft.International.Converters.TraditionalChineseToSimplifiedConverter;
 using MilkiBotFramework.Messaging;
 using MilkiBotFramework.Plugining;
@@ -14,6 +15,7 @@ using MilkiBotFramework.Services;
 using System;
 using System.Buffers;
 using System.ComponentModel;
+using System.Diagnostics.Metrics;
 using System.Text;
 
 namespace mjbot.Plugins;
@@ -22,7 +24,7 @@ namespace mjbot.Plugins;
 [Description("鳄鱼插件")]
 public class Crocodile(ISensitiveScanService sensitiveScanService) : BasicPlugin
 {
-    private const int MaxLoopCount = 1000;
+    private const int MaxLoopCount = 10;
     private static readonly Encoding EucJp = Encoding.GetEncoding(51932);
     private static readonly Encoding Gbk = Encoding.GetEncoding(936);
 
@@ -86,7 +88,7 @@ public class Crocodile(ISensitiveScanService sensitiveScanService) : BasicPlugin
             char glitchedChar = simplified[i];
             char originalChar = origin[i];
 
-            if (glitchedChar == '?' || ProtectedChars.Contains(originalChar))
+            if (glitchedChar == '・' || glitchedChar == '?' || ProtectedChars.Contains(originalChar))
             {
                 sb.Append(originalChar);
             }
@@ -102,10 +104,8 @@ public class Crocodile(ISensitiveScanService sensitiveScanService) : BasicPlugin
     /// <summary>
     /// 中文转一阶鹅语指令
     /// </summary>
-    /// <param name="context">所有参数（含空格）</param>
-    /// <returns></returns>
     [CommandHandler("goose")]
-    [Description("中文转一阶鹅语指令")]
+    [Description("中文转鹅语指令 /goose 阶数（可选，默认为1） 原文")]
     public async Task<IResponse?> Goose(MessageContext context)
     {
         var param = context.CommandLineResult?.SimpleArgument.ToString();
@@ -113,10 +113,38 @@ public class Crocodile(ISensitiveScanService sensitiveScanService) : BasicPlugin
         {
             return null;
         }
-
-        var sanitizedString = await GetSanitizedStringAsync(Convert1(param));
-        if (string.IsNullOrWhiteSpace(sanitizedString)) return null;
-        return Reply(sanitizedString);
+        string[] parts = param.Split(' ' , 2);
+        if (int.TryParse(parts[0], out int number))
+        {
+            string origin = parts[1];
+            var sanitizedResult = await GetSanitizedStringAsync(Convert1(origin));
+            if (string.IsNullOrEmpty(sanitizedResult)) return null;
+            StringBuilder sb = new StringBuilder();
+            sb.Append(sanitizedResult);
+            for (int i = 0; i < number - 1; i++)
+            {
+                if (sanitizedResult != Convert1(sanitizedResult))
+                {
+                    sb.Append("\r\n");
+                    sb.Append("↓");
+                    sb.Append("\r\n");
+                    sanitizedResult = await GetSanitizedStringAsync(Convert1(sanitizedResult));
+                    sb.Append(sanitizedResult);
+                }
+                else
+                {
+                    break; 
+                }
+            }
+            return Reply(sb.ToString());
+        }
+        else
+        {
+            var sanitizedResult = await GetSanitizedStringAsync(Convert1(param));
+            if (string.IsNullOrEmpty(sanitizedResult)) return null;
+            return Reply(sanitizedResult);
+        }
+            
     }
 
     /// <summary>
