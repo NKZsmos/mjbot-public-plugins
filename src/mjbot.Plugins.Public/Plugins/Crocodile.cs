@@ -6,17 +6,14 @@
  * Copyright (c) 2025 BJMANIA
  */
 
-using Microsoft.Extensions.Primitives;
+using System.Buffers;
+using System.ComponentModel;
+using System.Text;
 using Microsoft.International.Converters.TraditionalChineseToSimplifiedConverter;
 using MilkiBotFramework.Messaging;
 using MilkiBotFramework.Plugining;
 using MilkiBotFramework.Plugining.Attributes;
 using MilkiBotFramework.Services;
-using System;
-using System.Buffers;
-using System.ComponentModel;
-using System.Diagnostics.Metrics;
-using System.Text;
 
 namespace mjbot.Plugins;
 
@@ -113,11 +110,11 @@ public class Crocodile(ISensitiveScanService sensitiveScanService) : BasicPlugin
         {
             return null;
         }
-        string[] parts = param.Split(' ' , 2);
+        string[] parts = param.Split(' ', 2);
         if (int.TryParse(parts[0], out int number))
         {
             string origin = parts[1];
-            var sanitizedResult = await GetSanitizedStringAsync(Convert1(origin));
+            var sanitizedResult = Convert1(origin);
             if (string.IsNullOrEmpty(sanitizedResult)) return null;
             StringBuilder sb = new StringBuilder();
             sb.Append(sanitizedResult);
@@ -128,15 +125,18 @@ public class Crocodile(ISensitiveScanService sensitiveScanService) : BasicPlugin
                     sb.Append("\r\n");
                     sb.Append("↓");
                     sb.Append("\r\n");
-                    sanitizedResult = await GetSanitizedStringAsync(Convert1(sanitizedResult));
+                    sanitizedResult = Convert1(sanitizedResult);
                     sb.Append(sanitizedResult);
                 }
                 else
                 {
-                    break; 
+                    break;
                 }
             }
-            return Reply(sb.ToString());
+
+            var sanitizedStringAsync = await GetSanitizedStringAsync(sb.ToString());
+            if (string.IsNullOrEmpty(sanitizedStringAsync)) return null;
+            return Reply(sanitizedStringAsync);
         }
         else
         {
@@ -144,7 +144,7 @@ public class Crocodile(ISensitiveScanService sensitiveScanService) : BasicPlugin
             if (string.IsNullOrEmpty(sanitizedResult)) return null;
             return Reply(sanitizedResult);
         }
-            
+
     }
 
     /// <summary>
