@@ -1,4 +1,4 @@
-﻿/*
+/*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -23,7 +23,7 @@ namespace mjbot.Plugins;
 class DemoPlugin(ILogger<DemoPlugin> logger,
     IConfiguration<TestConfiguration> configuration,
     IRichMessageConverter richMessageConverter,
-    PluginManager pluginManager) : BasicPlugin
+    PluginCatalog pluginManager) : BasicPlugin
 {
     [CommandHandler("key2")]
     public async Task<IResponse> Key2()

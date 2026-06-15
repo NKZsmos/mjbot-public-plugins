@@ -1,4 +1,4 @@
-﻿/*
+/*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -17,7 +17,8 @@ using MilkiBotFramework.Services;
 
 namespace mjbot.Plugins;
 
-[PluginIdentifier("CD18B6F0-A703-7A7D-98DA-1BCBE5585890", Index = 1, Authors = "Isaax", Scope = "mjbot")]
+[PluginIdentifier("CD18B6F0-A703-7A7D-98DA-1BCBE5585890", Index = 1, Authors = "Isaax", Scope = "mjbot",
+    DefaultEnabled = false)]
 [Description("鳄鱼插件")]
 public class Crocodile(ISensitiveScanService sensitiveScanService) : BasicPlugin
 {
